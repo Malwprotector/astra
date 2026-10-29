@@ -282,6 +282,14 @@ main .hd {
   display: none
 }
 
+#sbClose {
+  display: none;
+  margin-left: auto;
+  font-size: 20px;
+  line-height: 1;
+  padding: .35rem .55rem
+}
+
 .eco {
   margin-left: auto;
   display: flex;
@@ -762,6 +770,10 @@ fieldset div {
   }
 
   #mn {
+    display: inline-block
+  }
+
+  #sbClose {
     display: inline-block
   }
 }
@@ -3022,6 +3034,7 @@ fieldset div {
     <button aria-label="New chat" id="nw">
      + New
     </button>
+    <button aria-label="Close menu" id="sbClose" type="button">&#10005;</button>
    </div>
    <input aria-label="Search chats" id="sq" placeholder="Search chats" type="search"/>
    <nav aria-label="Conversations" id="cl">
@@ -3681,12 +3694,22 @@ async function web(q) {
   for (const p of providers) {
     try {
       if (p == 'wikipedia') {
-        const u = x => `https://${lang}.wikipedia.org/w/api.php?format=json&origin=*&action=query&` + x;
-        let j = await (await fetch(u(
-          'generator=search&gsrlimit=2&prop=extracts|info&inprop=url&exintro=1&explaintext=1&exsentences=3&gsrsearch=' +
-          encodeURIComponent(clean)))).json();
-        Object.values(j.query?.pages || {}).sort((a, b) => a.index - b.index).forEach(x => out.push(
-          `**${x.title}**: ${String(x.extract||'').slice(0,420)}\n\nSource: [Wikipedia](${x.fullurl})`));
+        const wikiBase = `https://${lang}.wikipedia.org/w/api.php?format=json&origin=*&action=query&`;
+        const corrected = clean.replace(/\beipstein\b/ig, 'Epstein').replace(/epstein[- ]bar\b/ig, 'Epstein-Barr');
+        const searchUrl = wikiBase + 'list=search&srlimit=3&srinfo=suggestion&srprop=&search=' + encodeURIComponent(corrected);
+        const sr = await fetch(searchUrl);
+        if (!sr.ok) throw Error('Wikipedia HTTP ' + sr.status);
+        const sj = await sr.json();
+        const hits = sj.query?.search || [];
+        if (hits.length) {
+          const ids = hits.map(x => x.pageid).join('|');
+          const pageUrl = wikiBase + 'pageids=' + encodeURIComponent(ids) + '&prop=extracts|info&inprop=url&exintro=1&explaintext=1&exsentences=3';
+          const pr = await fetch(pageUrl);
+          if (!pr.ok) throw Error('Wikipedia pages HTTP ' + pr.status);
+          const pj = await pr.json();
+          Object.values(pj.query?.pages || {}).forEach(x => out.push(
+            `**${x.title}**: ${String(x.extract||'').slice(0,700)}\n\nSource: [Wikipedia](${x.fullurl})`));
+        }
       } else if (p == 'duckduckgo') {
         const j = await (await fetch('https://api.duckduckgo.com/?format=json&no_html=1&skip_disambig=1&q=' +
           encodeURIComponent(clean))).json();
@@ -3715,7 +3738,8 @@ async function web(q) {
         });
       }
     } catch (e) {
-      /* one provider failure must not block the others */ }
+      console.warn('Astra web provider failed:', p, e)
+    }
   }
   if (!out.length) return;
   return {
@@ -3886,7 +3910,7 @@ function mEl(m, i, last) {
   e.className = 'm ' + m.r;
   e.dataset.i = i;
   e.innerHTML =
-    `<div class="x">${u?esc(m.c):md(m.c)}</div><div class="mt">${u?'':`<span class="tg">${esc(m.o||'')}</span><span>${((m.ms||0)/1000).toFixed(2)} s</span>`}<button data-a="cp">Copy</button>${u?'<button data-a="ed">Edit</button>':`${last?'<button data-a="rg">Regenerate</button>':''}<button data-a="sh">Share</button>`}</div>`;
+    `<div class="x">${u?esc(m.c):md(m.c)}</div><div class="mt">${u?'':`<span class="tg">${esc(m.o||'')}</span><span>${((m.ms||0)/1000).toFixed(2)} s</span>`}<button data-a="cp">Copy</button>${u?'<button data-a="ed">Edit</button>':`${last?'<button data-a="rg">Regenerate</button>':''}<button data-a="sh">Share</button><button data-a="fb">Feedback</button>`}</div>`;
   return e
 }
 async function run(q) {
@@ -4117,6 +4141,15 @@ $('#fi').onchange = e => {
 };
 $('#sq').oninput = rSB;
 $('#mn').onclick = () => $('#sb').classList.toggle('open');
+$('#sbClose').onclick = () => $('#sb').classList.remove('open');
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') $('#sb').classList.remove('open')
+});
+$('main').addEventListener('click', e => {
+  if (matchMedia('(max-width:760px)').matches && $('#sb').classList.contains('open') && !e.target.closest('#mn')) {
+    $('#sb').classList.remove('open')
+  }
+});
 $('#nw').onclick = () => {
   nc();
   render();
@@ -4195,6 +4228,35 @@ $('#lg').onclick = async e => {
       await navigator.clipboard.writeText(url.href);
       toast('Link copied')
     } catch { toast('Copy blocked: select the link manually') }
+  } else if (a == 'fb') {
+    let pi = i - 1;
+    while (pi >= 0 && c.m[pi].r != 'u') pi--;
+    if (pi < 0) return toast('No prompt found for this answer');
+    const prompt = c.m[pi].c;
+    const subject = 'Astra feedback - ' + (c.title || 'response').slice(0, 80);
+    const body = [
+      'Hello Phoen team,',
+      '',
+      'I would like to share feedback about an Astra response.',
+      '',
+      'FEEDBACK:',
+      '[Please write your feedback here]',
+      '',
+      'PROMPT:',
+      prompt,
+      '',
+      'ASTRA RESPONSE:',
+      m.c,
+      '',
+      'RESPONSE METHOD:',
+      m.o || 'Not specified',
+      '',
+      'PAGE:',
+      location.href.split('#')[0],
+      '',
+      'Thank you.'
+    ].join('\n');
+    location.href = 'mailto:contact@phoen.org?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body)
   } else if (a == 'ed' && !busy) {
     el.querySelector('.x').innerHTML =
       `<textarea class="ea" rows="3" aria-label="Edit message">${esc(m.c)}</textarea><div class="mt"><button data-a="sv">Save and resend</button><button data-a="cn">Cancel</button></div>`;
