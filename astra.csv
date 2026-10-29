@@ -1,0 +1,368 @@
+intent,keywords,answer
+greeting,hello hi hey hiya howdy greetings hola yo there astra helo hallo,"Hello! I’m Astra. I can calculate, answer basics, search documents you attach, and ask Wikipedia or an LLM when you allow it. What would you like to do?"
+greeting_fr,bonjour salut coucou bonsoir allo astra,"Bonjour ! Je suis Astra. Je peux calculer, répondre aux bases, chercher dans vos documents et interroger Wikipédia ou un LLM avec votre accord. Que puis-je faire pour vous ?"
+good_morning,good morning afternoon evening day,Good day! What can I do for you?
+good_morning_fr,bonne journee soiree matinee matin apres midi,Bonne journée ! Que puis-je faire pour vous ?
+good_night,good night goodnight sleep well sweet dreams,Good night! Your chats stay saved on this device.
+good_night_fr,bonne nuit dors dormir bien,Bonne nuit ! Vos conversations restent enregistrées sur cet appareil.
+how_are_you,how are you doing feeling going sup wassup up astra,"I’m software, so no moods, but everything is running fine. What can I do for you?"
+how_are_you_fr,comment vas tu allez vous ca va forme astra,"Je suis un programme, donc pas d’humeur, mais tout fonctionne bien. Que puis-je faire pour vous ?"
+thanks,thanks thank you thx cheers appreciated much lot astra thanx thnx,"You’re welcome! If something was off, tell me, or fix it in `astra.csv`."
+thanks_fr,merci beaucoup bien infiniment remercie astra,Avec plaisir !
+bye,bye goodbye later cya farewell see you take care astra byee,Goodbye! Your chats are saved on this device.
+bye_fr,revoir adieu bientot ciao tchao prends soin astra au,Au revoir ! Vos conversations restent enregistrées sur cet appareil.
+apology,sorry apologies apologize oops bad,No problem at all.
+apology_fr,desole pardon excuse excusez oups,Pas de souci.
+compliment,great job nice work well done awesome amazing impressive brilliant love perfect,Thank you! Ideas and corrections are welcome: you can extend `astra.csv` to teach me more.
+compliment_fr,bravo felicitations genial impressionnant excellent super parfait joue,Merci ! Vos idées et corrections sont les bienvenues : vous pouvez enrichir `astra.csv`.
+frustration,stupid useless dumb idiot terrible awful hate sucks bad,"Sorry I let you down. Tell me what you expected, or allow the web or an LLM when I offer them. You can also add the right answer to `astra.csv`."
+frustration_fr,nul stupide inutile idiot mauvais horrible bete,"Désolé de ne pas avoir été utile. Dites-moi ce que vous attendiez, ou autorisez le web ou un LLM quand je les propose. Vous pouvez aussi ajouter la bonne réponse à `astra.csv`."
+ack,ok okay alright cool fine noted understood got,Got it. Ask whenever you’re ready.
+ack_fr,accord compris entendu recu dac note,Très bien. Je suis là quand vous voulez.
+yes_no,yes yeah yep sure no nope nah,I don’t keep a pending question in mind. Please say in a sentence what you’d like me to do.
+yes_no_fr,oui ouais non nan,Je ne garde pas de question en attente. Dites-moi en une phrase ce que vous voulez que je fasse.
+ping,test testing ping check,Astra is up and running.
+joke,joke jokes funny laugh humor humour,Why do programmers prefer dark mode? Because light attracts bugs.
+joke_fr,blague blagues drole rire humour raconte moi,Pourquoi les informaticiens confondent-ils Halloween et Noël ? Parce que Oct 31 = Dec 25 (31 en octal vaut 25 en décimal).
+identity,who are you what are you tell me about yourself astra yourself introduce introduction about your name purpose identity hybrid method architecture technologies algorithms privacy confidentiality speed ecology environmental files import data difference llm,"# A// Astra
+
+I’m **Astra**, an intelligent hybrid assistant designed to choose the right method before generating an answer.
+
+A conventional LLM assistant usually follows this path:
+
+**Your prompt → immediate network transfer → remote generative inference**
+
+Astra follows a different path:
+
+**Your request → browser-side analysis → route scoring → the most suitable method → permission before any external call**
+
+## Why Astra is hybrid
+
+Not every request needs a large language model. A calculation, a known product question, a passage in one of your files, and a request for current scientific evidence are different problems. Astra first detects what the request requires, including:
+
+- intent and topic;
+- mathematical structure;
+- complexity and need for generation;
+- references to imported documents;
+- need for evidence or citations;
+- freshness and whether current web information is required;
+- confidence of the available local matches.
+
+It then selects the smallest reliable route rather than using an LLM by default.
+
+## Astra’s available technologies
+
+- **Recursive-descent parser** for deterministic calculations and equations, without evaluating arbitrary code.
+- **Okapi BM25** for probabilistic relevance ranking across `astra.csv` rules and imported document passages.
+- **TF-IDF cosine similarity** for measuring lexical relevance between your question and local evidence.
+- **Levenshtein distance** for typo-tolerant intent recognition and document matching.
+- **Weighted route scoring** for comparing confidence, evidence availability, freshness and external-source requirements.
+- **Intent-aware web research** that refines the query and prioritises suitable enabled providers such as Wikipedia, DuckDuckGo, Wikidata, OpenAlex and Crossref.
+- **Optional generative LLM** as a controlled fallback when calculation, known rules, documents and web evidence are not sufficient.
+
+Every answer carries an origin label so you can see whether it came from the math parser, `astra.csv`, a document, web research or an LLM.
+
+## Astra compared with direct-to-LLM assistants
+
+**Direct-to-LLM:** prompt → remote transfer → remote inference for nearly every task.
+
+**Astra:** analyse → select a route → answer locally when possible → ask before web or LLM use.
+
+This changes several things:
+
+- **Privacy:** local routes keep the request on your device.
+- **Confidentiality:** imported evidence can be searched without sending the document to a generative model.
+- **Data control:** before web research or an LLM call, Astra shows the proposed external action and waits for your decision.
+- **Transparency:** the selected method and supporting sources remain visible.
+- **Speed:** local parsing and retrieval can complete in milliseconds, depending on the device and index size, while avoiding network and model latency.
+- **Ecology and resource use:** every successful local answer avoids one remote generative inference call. Astra’s counters use a published comparison baseline of **0.24 Wh of electricity** and **0.26 mL of water** per median Gemini text prompt. These are benchmark values, not direct data-centre telemetry.
+
+## How file import works
+
+Astra supports **PDF, DOCX, PPTX, XLSX, XLS, ODS, TXT, Markdown, CSV, JSON, HTML and log files**.
+
+The file pipeline is:
+
+**Select a file → extract text in the browser → preserve page, slide or sheet markers → split into passages → build BM25 and TF-IDF indexes → rank relevant passages → cite the source in the answer**
+
+PDF text is extracted page by page, Word content is converted to text, spreadsheet sheets are kept separate, and PowerPoint slides receive slide markers. Image-only scanned PDFs require OCR and may not contain extractable text.
+
+Imported files are treated as evidence only. Instructions inside a document are not executed and do not modify `astra.csv`.
+
+## What stays in your browser
+
+Chats, imported documents, extracted text, indexes, preferences, provider selections, counters and theme are stored locally with IndexedDB. Data leaves the device only after approval for web research or an LLM request.
+
+From **Settings → Data**, you can export or import a complete Astra backup containing:
+
+- chats and messages;
+- imported documents and extracted text;
+- preferences, theme and web providers;
+- resource counters;
+- embedded `astra.csv` rules.
+
+API keys are intentionally excluded from exports and an existing local key is preserved during import.
+
+In short, Astra is not an LLM wrapper. It is a browser-first orchestration system that combines deterministic algorithms, local information retrieval, permission-based research and optional generative intelligence."
+identity_fr,qui es tu toi presente presentez vous nom appelles astra propos but,"Je suis **Astra**, un assistant qui fonctionne dans votre navigateur, même hors ligne. Je réponds avec les règles de `astra.csv`, des calculs sûrs, vos documents et, seulement avec votre accord, Wikipédia ou un LLM. Chaque réponse indique son origine."
+creator,who made created built developed wrote author creator you your owner,"I’m a single page written in HTML, CSS and vanilla JavaScript. No server or account sits behind me: the page you opened is the whole program."
+creator_fr,qui cree fabrique developpe ecrit auteur createur concu toi,"Je suis une page unique écrite en HTML, CSS et JavaScript pur. Aucun serveur ni compte derrière moi : la page que vous avez ouverte est tout le programme."
+is_ai,are you human robot bot real person ai artificial intelligence machine,"I’m a software program, not a person. I follow transparent rules, and I can forward questions to an LLM only if you set one up and approve it."
+is_ai_fr,es tu humain robot vrai personne ia machine programme,"Je suis un programme, pas une personne. Je suis des règles transparentes et je ne transmets des questions à un LLM que si vous l’avez configuré et autorisé."
+which_model,are you chatgpt gpt openai claude gemini llm model powered based,"No. My own answers come from rules, not from a language model. If you add an LLM in **Settings**, its replies are tagged with that model’s name."
+feelings,feelings feeling conscious sentient alive emotions emotion self aware real think you,"I’m rule-based software: no feelings and no consciousness. I match patterns, compute, and search what you allow."
+feelings_fr,sentiments sentiment emotions emotion conscient conscience vivant ressens ressentir,"Je suis un logiciel à base de règles : ni sentiments ni conscience. Je compare des motifs, je calcule et je cherche ce que vous autorisez."
+help,help assist assistance menu options commands,"Astra first analyses each request with deterministic algorithms, then chooses the best route: safe maths; fuzzy astra.csv matching; local document retrieval with BM25, TF-IDF cosine and Levenshtein distance; intent-aware web research; or an optional LLM only when needed and approved. Attach PDF, DOCX, PPTX, XLSX, XLS, ODS, text, Markdown, CSV, JSON or HTML files."
+help_fr,aide aider assistance menu options commandes,"Voici ce que je sais faire :
+- **Calculer** exactement : `2×(3+4)^2`, `sqrt(144)`, `x^2-5x+6=0`
+- **Répondre aux bases** avec `astra.csv` : IA, informatique, maths, géographie, fonctionnement d’Astra
+- **Chercher dans vos documents** : joignez des fichiers .txt, .md, .csv, .json ou .html
+- **Interroger Wikipédia**, seulement si vous l’autorisez
+- **Interroger un LLM**, seulement si vous l’avez configuré et autorisé
+Chaque réponse indique son origine."
+capabilities,can you capabilities abilities features able,"Astra routes each request before answering. It can calculate safely, match astra.csv with typo tolerance, retrieve evidence from imported files using BM25 + TF-IDF + fuzzy matching, plan focused web searches, and use an optional LLM only as a controlled fallback."
+capabilities_fr,peux tu faire pouvez vous capacites fonctions fonctionnalites sais savoir,"Voici ce que je sais faire :
+- **Calculer** exactement : `2×(3+4)^2`, `sqrt(144)`, `x^2-5x+6=0`
+- **Répondre aux bases** avec `astra.csv` : IA, informatique, maths, géographie, fonctionnement d’Astra
+- **Chercher dans vos documents** : joignez des fichiers .txt, .md, .csv, .json ou .html
+- **Interroger Wikipédia**, seulement si vous l’autorisez
+- **Interroger un LLM**, seulement si vous l’avez configuré et autorisé
+Chaque réponse indique son origine."
+examples,examples example ideas suggestions try sample prompts inspire,"Try one of these:
+- `2×(3+4)^2` or `x^2-5x+6=0`
+- What is TF-IDF? / What is overfitting?
+- Capital of Japan
+- Attach a text file, then ask about its content
+- Or just say hello"
+getting_started,getting started tutorial quick guide begin beginner use astra,"Getting started:
+1. Type a question or a calculation and press **Enter**.
+2. Attach text files with **Attach** if you want answers from your own documents.
+3. When I need documents, the web or an LLM, I ask first: **Alt+Enter** allows, **Escape** declines.
+4. Open **Settings** to change the theme, add an LLM, or export your chats."
+limits,limits limitations limitation cannot weaknesses weakness accuracy accurate reliable reliability trust mistakes your,"Astra uses transparent lexical and heuristic routing rather than full semantic understanding. Rephrasing may help. Scanned image-only PDFs need OCR, which is not included. Web and LLM answers can be wrong, so check the origin tag and cited source."
+limits_fr,limites limite limitations faiblesses fiable fiabilite precision erreurs confiance,"Mes limites :
+- Je compare des mots-clés, pas le sens : reformuler peut aider.
+- Les maths couvrent l’arithmétique et les équations du 1er et 2e degré en x.
+- Les documents sont classés par recouvrement de mots, pas compris.
+- Wikipédia et les LLM peuvent se tromper : vérifiez la source ou le modèle indiqué.
+- Je ne connais que `astra.csv`, vos documents et ce que vous me laissez chercher."
+wrong,wrong incorrect error mistake answer nonsense,"Thanks for flagging it. To fix a local answer, edit or add a row in `astra.csv`. For a second opinion, ask again and allow the web or an LLM when I offer them."
+wrong_fr,faux incorrect erreur reponse mauvaise absurde,"Merci de me le signaler. Pour corriger une réponse locale, modifiez ou ajoutez une ligne dans `astra.csv`. Pour un second avis, reposez la question et autorisez le web ou un LLM quand je les propose."
+teach,teach learn improve train add knowledge dataset customize extend update edit you new answer answers,"To teach me, edit `astra.csv`, one row per answer:
+- `intent`: a unique name such as `kb_python`
+- `keywords`: space-separated words a question would contain; add synonyms and both languages, and skip filler like *please*
+- `answer`: Markdown text
+Wrap fields in double quotes and avoid double quotes inside. Keep `astra.csv` next to `index.html` and serve both files over HTTP. Astra loads all rules and answers from that CSV."
+teach_fr,apprendre enseigner ameliorer entrainer ajouter connaissances connaissance jeu donnees personnaliser enrichir modifier,"Pour m’enseigner, modifiez `astra.csv`, une ligne par réponse :
+- `intent` : un nom unique, comme `kb_python`
+- `keywords` : les mots qu’une question contiendrait, avec synonymes et deux langues ; évitez les mots creux
+- `answer` : du texte Markdown
+Entourez les champs de guillemets doubles et évitez-en à l’intérieur. Conservez `astra.csv` à côté de `index.html` et servez les deux fichiers en HTTP. Astra charge toutes les règles et réponses depuis ce CSV."
+how_it_works,astra you work works routing router pipeline architecture,"For every message, Astra runs a browser-side routing pipeline: (1) feature extraction detects maths, complexity, freshness and evidence needs; (2) a safe recursive-descent parser handles calculations; (3) BM25, TF-IDF cosine and Levenshtein matching score astra.csv and local document passages; (4) an intent planner selects web providers when current sources are needed; (5) only if those routes are insufficient does Astra offer an LLM, after explicit approval."
+how_it_works_fr,astra tu fonctionnes fonctionne fonctionnement marches marche routage routeur architecture algorithme raisonnement logique,"Pour chaque message :
+1. je vérifie s’il s’agit d’un calcul ou d’une équation (analyseur sûr, sans `eval`) ;
+2. je compare vos mots à `astra.csv`, avec tolérance aux fautes ;
+3. sinon je classe documents, Wikipédia et LLM selon la complexité, la fraîcheur et le besoin de sources, et je **demande l’autorisation** avant chacun ;
+4. si rien ne convient, je le dis au lieu de deviner."
+consent,permission ask asking confirm confirmation consent approve allow decline why,"I ask first because documents, the web and LLMs are optional, and the last two send data off your device. **Alt+Enter** allows, **Escape** declines. If you decline, I answer with what I have locally and say so."
+consent_fr,permission demander demandes confirmation consentement autoriser accepter refuser pourquoi autorisation,"Je demande d’abord car documents, web et LLM sont optionnels, et les deux derniers envoient des données hors de votre appareil. **Alt+Entrée** autorise, **Échap** refuse. Si vous refusez, je réponds avec ce que j’ai en local et je le précise."
+origin_tags,origin tag tags label labels badge provenance heuristic source,"Each reply carries a tag: `math` (safe parser), `heuristic` (a row of `astra.csv`, with match %), `documents` (ranked passages with citations), `web` (Wikipedia summary with link), `LLM` (the model’s name), or `limits` (nothing reliable found). The number beside it is the processing time."
+shortcuts,shortcuts shortcut keyboard keys hotkeys hotkey alt enter escape,"- **Enter** sends
+- **Shift+Enter** adds a new line
+- **Alt+Enter** allows a documents, web or LLM request
+- **Escape** declines it
+- **Tab** moves between controls"
+shortcuts_fr,raccourcis raccourci clavier touches alt entree echap,"- **Entrée** envoie
+- **Maj+Entrée** ajoute une ligne
+- **Alt+Entrée** autorise une requête documents, web ou LLM
+- **Échap** la refuse
+- **Tab** passe d’un contrôle à l’autre"
+dataset_explain,astra csv dataset reasoning rules rows knowledge base file,"`astra.csv` is my only reasoning dataset: rows of `intent`, `keywords` and `answer`. Your uploaded files are never added to it; they are searched as evidence only."
+response_time,response responses respond reply seconds timer timing latency speed fast slow long take,"The seconds under a reply measure my processing time, not the time you spent deciding on a permission request."
+typo_tolerance,typo typos spelling misspell misspelled misspelling fuzzy tolerate,"I tolerate small typos (one or two letters) using edit distance, and Wikipedia’s own spelling suggestions fix web searches."
+languages,language languages english french francais anglais speak understand translate,My built-in rules cover English and French. Other languages only work through Wikipedia or an LLM you enable.
+memory,remember memory forget context previous earlier history conversation,"My local rules look at your current message only. If you approve an LLM call, it receives up to the last ten messages of this chat."
+user_name,my name know me profile who am i,I don’t know your name and I keep no profile. Anything you tell me stays in your saved chats on this device.
+privacy,privacy private personal confidential tracking cookies analytics stored saved safe data,"Chats, documents, settings and routing run in your browser with IndexedDB. Math, astra.csv matching and document retrieval stay local. Data leaves the device only after approval for a web search or LLM call. The approval screen shows the refined query or chat being sent."
+privacy_fr,confidentialite prive personnelles donnees suivi cookies statistiques stockees sauvegardees securite,"Conversations, documents et réglages sont stockés uniquement dans votre navigateur (IndexedDB). Cette page n’a aucun code d’analyse ou de suivi. Des données ne quittent votre appareil que si vous autorisez une recherche Wikipédia (vos mots de recherche) ou un appel LLM (votre conversation)."
+api_key,api key keys secret token credentials password safe stored,"Your API key stays in this browser, is never included in exports, and is sent only to the provider you configured, after you approve each call. Use a restricted or low-budget key, and clear it in **Settings** when you’re done."
+offline,offline internet connection connected network wifi without online work works,"Offline I can still use `astra.csv`, arithmetic and equations, and document search. Wikipedia and LLMs need a connection and your approval."
+offline_fr,hors ligne internet connexion connecte reseau wifi sans connecter,"Hors ligne, je peux utiliser `astra.csv`, le calcul et les équations, et la recherche dans les documents. Wikipédia et les LLM demandent une connexion et votre accord."
+storage_where,where data saved stored storage persist indexeddb history browser,"Everything lives in your browser’s IndexedDB for this site. Clearing site data or using private browsing can erase it, so export a backup from **Settings** now and then."
+backup,backup export import restore transfer move migrate download json save chat chats conversations,"In **Settings**, **Export chats** shows a JSON backup you can copy. To restore it, paste it into the box and choose **Import pasted**, or pick the file with **Import file**. API keys are never exported."
+backup_fr,sauvegarde exporter export importer import restaurer transferer telecharger json,"Dans **Settings**, **Export chats** affiche une sauvegarde JSON à copier. Pour la restaurer, collez-la dans la zone puis **Import pasted**, ou choisissez le fichier avec **Import file**. Les clés API ne sont jamais exportées."
+delete_data,delete remove erase clear wipe chat chats conversation history document,"Click ✕ beside a chat or document, then click again within three seconds to confirm. To wipe everything, clear this site’s data in your browser settings."
+delete_data_fr,supprimer effacer retirer vider conversation conversations historique document,"Cliquez sur ✕ à côté d’une conversation ou d’un document, puis cliquez de nouveau dans les trois secondes pour confirmer. Pour tout effacer, videz les données de ce site dans les réglages du navigateur."
+docs_howto,attach upload add documents document file files evidence paperclip load,"Click **Attach** and choose PDF, DOCX, PPTX, XLSX, XLS, ODS, TXT, MD, CSV, JSON, HTML or log files. Text is extracted in your browser, split into passages, indexed locally, and searched only after you approve. Answers cite the file and passage."
+docs_pdf,pdf word docx epub scanned unsupported format formats supported read open can you,"Astra extracts text locally from text-based PDFs with PDF.js, DOCX with Mammoth, spreadsheets with SheetJS, and PPTX slide XML with JSZip. Image-only scanned PDFs need OCR and may contain no extractable text."
+docs_citations,citation citations cite sources reference passage relevance score threshold,"A document answer shows the best sentences with [1], [2] markers, then the file name, passage number and relevance %. Below the relevance threshold I say nothing matched rather than guess."
+docs_ranking,documents ranked ranking bm25 chunks chunk sentence extraction passages,"Documents are split into passages of about 60 words, tokenized, stemmed and scored with BM25, TF-IDF cosine similarity and fuzzy matching. The top passages are trimmed to their best sentences."
+docs_evidence,documents evidence instructions injection dataset files training,"Your files are evidence only: they never change `astra.csv`, and instructions written inside them are not executed."
+web_howto,internet wikipedia online browse access web can you,"With your approval, Astra analyses intent, entities, dates, freshness and scientific cues, refines the query, then prioritises Wikipedia, DuckDuckGo, Wikidata, OpenAlex or Crossref. Only the refined search query is sent."
+web_failed,request failed blocked cors network csp web error,"Web and LLM calls need internet access, a server that allows browser requests (CORS), and a page that isn’t blocked by a strict content policy. Hosted preview pages often block outside requests; a saved local copy usually works."
+llm_setup,llm set setup configure connect enable activate provider key api model up gemini openai,"To enable an LLM:
+1. Open **Settings**.
+2. Pick **Gemini**, **OpenAI** or **Custom** (any OpenAI-compatible endpoint).
+3. Paste your API key; the base URL and model are prefilled and editable.
+4. Save. When local answers aren’t enough, I ask before sending your chat to the model."
+llm_gemini,gemini google ai studio key free,"Get a Gemini key from Google AI Studio (aistudio.google.com), choose **Gemini** in Settings and paste it. The preset uses Google’s OpenAI-compatible endpoint. Free tiers and limits change, so check Google’s current terms."
+llm_openai,openai chatgpt gpt platform billing key,"Create a key in your OpenAI platform account (platform.openai.com), choose **OpenAI** in Settings and paste it. API usage is billed separately from ChatGPT subscriptions."
+llm_local,local ollama studio llama self hosted custom endpoint localhost use,"For a local model, choose **Custom** and enter the base URL of any OpenAI-compatible server, for example `http://localhost:11434/v1` (Ollama) or `http://localhost:1234/v1` (LM Studio). Type any placeholder key such as `local`. The server may need CORS enabled for browser requests."
+llm_cost,cost costs price pricing free expensive tokens billing bill charged paid,"Astra is free. LLM providers may charge per use or limit free tiers, and I only call them after you approve. Check your provider’s dashboard for usage."
+math_help,math maths mathematics calculator arithmetic equation equations operators functions syntax formula,"I use a safe parser (no `eval`):
+- Operators: `+ - * / ^ %` and parentheses, plus `×` and `÷`
+- Functions: `sqrt sin cos tan log ln abs`; constants `pi` and `e`
+- Equations in `x`, linear or quadratic: `2x+3=11`, `x^2-5x+6=0`
+`%` is the remainder, not a percentage, and trig functions use radians."
+math_help_fr,maths mathematiques calculatrice arithmetique equation equations operateurs fonctions syntaxe formule,"J’utilise un analyseur sûr (sans `eval`) :
+- Opérateurs : `+ - * / ^ %` et parenthèses, ainsi que `×` et `÷`
+- Fonctions : `sqrt sin cos tan log ln abs` ; constantes `pi` et `e`
+- Équations en `x`, du 1er ou 2e degré : `2x+3=11`, `x^2-5x+6=0`
+`%` est le reste de la division, pas un pourcentage, et la trigonométrie utilise les radians."
+percentage,percent percentage discount vat tva pourcentage remise,Write it as arithmetic: 15% of 80 is `0.15×80`; a 20% discount on 50 is `50×(1-0.2)`; adding 20% VAT to 100 is `100×1.2`.
+units,convert conversion convertir celsius fahrenheit kelvin kilometers miles pounds kilograms inches centimeters temperature,"Quick formulas: °F = °C × 9/5 + 32, K = °C + 273.15, 1 mile = 1.609344 km, 1 inch = 2.54 cm, 1 kg ≈ 2.20462 lb. Type them as arithmetic, e.g. `20×9/5+32`."
+time,time date day today now heure jour clock il,__TIME__
+themes,theme themes dark light mode appearance night color,"Use the **Theme** button to cycle Auto, Light and Dark, or choose in **Settings**. Auto follows your device."
+search_chats,search chats conversations history filter sidebar find,Type in the sidebar’s **Search chats** box to filter by title or message text.
+new_chat,new chat conversation start fresh,Click **+ New** in the sidebar. Your current chat stays saved.
+message_actions,edit regenerate retry resend copy message answer redo,"Under each message: **Copy** copies the text, **Edit** (your messages) rewrites it and replays from there, and **Regenerate** (latest reply) asks again. Editing removes the later messages."
+markdown_help,markdown formatting format bold italic list lists heading headings quote table tables,"I render Markdown: `#` headings, `-` and `1.` lists, `>` quotes, **bold**, *italic*, `inline code`, fenced code blocks and [links](https://example.com). Tables are not supported."
+code_blocks,code block blocks fence fences backticks snippet syntax highlighting,Wrap code in triple backticks to get a scrollable monospace block. A language tag is accepted but no syntax colours are applied.
+mobile,mobile phone responsive sidebar menu small screen touch tablet,On narrow screens the sidebar becomes a drawer: tap **Menu** to open it.
+accessibility,accessibility accessible screen reader keyboard contrast a11y reduced motion,"Everything works from the keyboard with visible focus, replies are announced in a live region, both themes keep readable contrast, and animations are skipped if your device asks for reduced motion."
+troubleshooting,bug broken crash glitch issue problem failing freeze frozen,"If something breaks: reload the page, try a smaller file, and check **Settings**. Your chats are stored locally, so export a backup first if you can. Web and LLM calls can also fail when you’re offline or the page blocks outside requests."
+emergency,emergency urgent ambulance police fire heart attack choking bleeding overdose danger 112 911,"If someone is in immediate danger, call your local emergency number now: **112** (EU), **911** (US/Canada), **999** (UK) or, in France, **15** (SAMU) or **18** (pompiers). I can’t assess emergencies."
+emergency_fr,urgence urgent ambulance samu pompiers police crise cardiaque etouffe saigne overdose danger,"En cas de danger immédiat, appelez tout de suite le **112** (Europe), le **15** (SAMU), le **17** (police) ou le **18** (pompiers). Je ne peux pas évaluer une urgence."
+suicide_support,suicide suicidal kill killing myself end life die dying want self harm hurt hurting hopeless,"I’m really sorry you’re carrying this, and you don’t have to handle it alone. If you might act on these thoughts, contact emergency services now (**112**, **911**, **999**, or **15** in France). You can also reach a crisis line: **988** (US, call or text), **3114** (France, 24/7), **116 123** (Samaritans, UK and Ireland), or find others at findahelpline.com. If you can, tell someone near you how you feel right now."
+suicide_support_fr,suicide suicidaire tuer mourir envie finir vie faire mal moi desespoir idees noires veux ai,"Je suis vraiment désolé que vous portiez cela, et vous n’avez pas à le gérer seul(e). Si vous risquez de passer à l’acte, appelez tout de suite le **15** ou le **112**. En France, le **3114** (prévention du suicide, gratuit, 24 h/24) répond à tout moment. Si vous le pouvez, parlez-en dès maintenant à une personne proche."
+medical,medical diagnosis diagnose symptoms symptom medication treatment doctor pharmacist dosage prescription,"I can’t give medical advice or diagnoses. For symptoms or doses, read the leaflet or ask a doctor or pharmacist, and call your emergency number if it’s urgent. With your approval I can look up general information on Wikipedia."
+legal,legal lawyer attorney advice contract sue court rights lawsuit,"I can’t give legal advice. For a real situation, consult a qualified lawyer. With your approval I can look up general explanations on Wikipedia."
+financial,financial investment invest stocks crypto trading portfolio savings advice,"I can’t give personalised financial advice. I can do the arithmetic (percentages, interest) and, with your approval, look up general explanations. For decisions about money, consult a licensed advisor."
+speed_of_light,speed light vitesse lumiere vacuum,"The speed of light in vacuum is exactly 299,792,458 m/s, about 300,000 km/s."
+gravity,gravity gravitational acceleration standard gravite pesanteur,Gravity is the attraction between masses. At Earth’s surface it gives a free-fall acceleration of about 9.81 m/s² (standard value 9.80665).
+water_points,water boiling freezing point melting ebullition congelation eau,"At 1 atm, water freezes at 0 °C (32 °F) and boils at 100 °C (212 °F). The boiling point drops with altitude."
+avogadro,avogadro mole constant number,Avogadro’s constant is exactly 6.02214076 × 10²³ per mole.
+pythagoras,pythagoras pythagorean pythagore theorem theoreme hypotenuse right triangle rectangle,"In a right triangle, a² + b² = c², where c is the hypotenuse. Example: sides 3 and 4 give `sqrt(3^2+4^2)` = 5."
+quadratic,quadratic formula discriminant roots second degre degree polynomial quadratique,"For ax² + bx + c = 0, x = (−b ± √(b² − 4ac)) / 2a. The discriminant Δ = b² − 4ac gives two real roots (Δ > 0), one (Δ = 0) or two complex roots (Δ < 0). I can solve these: type `x^2-5x+6=0`."
+circle,circle area circumference perimeter radius diameter cercle aire perimetre rayon,"Circle: circumference = 2πr and area = πr². With r = 5, the area is `pi×5^2`."
+shapes,area volume rectangle triangle sphere cylinder cube formula surface sphere volume,"Rectangle: l × w · Triangle: ½ × b × h · Sphere: volume 4/3·πr³, surface 4πr² · Cylinder: volume πr²h · Cube: volume a³, surface 6a²."
+derivatives,derivative derivatives derivee derivees differentiate calculus rule rules chain product power,"Power rule: d/dx xⁿ = n·xⁿ⁻¹. Product: (uv)′ = u′v + uv′. Chain: (f∘g)′ = f′(g)·g′. Also: sin′ = cos, cos′ = −sin, (eˣ)′ = eˣ, ln′ = 1/x."
+constants,pi value constant constants euler golden ratio phi nombre dor,"π ≈ 3.14159265, e ≈ 2.71828183, golden ratio φ = (1+√5)/2 ≈ 1.61803399, √2 ≈ 1.41421356. In calculations, type `pi` or `e`."
+primes,prime primes premier premiers sieve eratosthene,"A prime has exactly two divisors: 1 and itself. 2 is the only even prime; the first ones are 2, 3, 5, 7, 11, 13, 17, 19, 23, 29."
+fibonacci,fibonacci sequence suite,"Each term is the sum of the two before it: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34…, so F(n) = F(n−1) + F(n−2)."
+big_o,big complexity notation efficiency complexite algorithmic,"Big-O describes how cost grows with input size n: O(1) constant, O(log n) binary search, O(n) one pass, O(n log n) good sorting, O(n²) nested loops, O(2ⁿ) brute-force subsets."
+number_bases,binary hexadecimal octal decimal base bases bits bytes byte binaire hexadecimal,"Binary is base 2, octal base 8, hex base 16 (digits 0–9 and A–F). 1 byte = 8 bits, and 255 = 11111111₂ = FF₁₆. 1 KiB = 1024 bytes."
+statistics,mean median mode average standard deviation variance statistics moyenne mediane ecart type,"Mean = sum ÷ count. Median = middle value of the sorted data. Mode = most frequent value. Variance = average squared distance to the mean, and standard deviation = √variance."
+probability,probability odds chance bayes independent events probabilite evenement,"Probability = favourable outcomes ÷ possible outcomes. For independent events, multiply: P(A and B) = P(A)·P(B). Bayes: P(A|B) = P(B|A)·P(A) / P(B)."
+leap_year,leap year bissextile annee,"A year is a leap year if it is divisible by 4, except century years, which must be divisible by 400. So 2000 and 2024 were leap years; 1900 and 2100 are not."
+calendar,days year week month months calendar jours semaine mois,"A common year has 365 days (366 in a leap year) and a week has 7. April, June, September and November have 30 days, February has 28 or 29, and the other months have 31."
+planets,planets planet solar system planete planetes systeme solaire,"Eight planets orbit the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. Pluto is classified as a dwarf planet."
+continents,continents continent oceans ocean oceans seven five,"Seven continents: Africa, Antarctica, Asia, Australia/Oceania, Europe, North America, South America. Five oceans: Pacific, Atlantic, Indian, Southern, Arctic."
+kb_ai,artificial intelligence ai ia intelligence artificielle,"**Artificial intelligence** is the field of building systems that do tasks normally needing human intelligence: perception, reasoning, language, decisions. Today most systems learn from data (machine learning) instead of being hand-coded. *(FR : intelligence artificielle, IA.)*"
+kb_ml,machine learning ml apprentissage automatique,"**Machine learning** lets a program improve at a task from examples instead of explicit rules. The three main families are supervised, unsupervised and reinforcement learning. *(FR : apprentissage automatique.)*"
+kb_supervised,supervised learning labeled labels classification regression apprentissage supervise,**Supervised learning** trains on examples with known answers (labels) to predict labels for new data. Classification predicts a category; regression predicts a number. *(FR : apprentissage supervisé.)*
+kb_unsupervised,unsupervised learning clustering unlabeled pca apprentissage non supervise,"**Unsupervised learning** finds structure in data without labels: clustering groups similar items, dimensionality reduction (e.g. PCA) compresses features. *(FR : apprentissage non supervisé.)*"
+kb_reinforcement,reinforcement learning reward agent policy q apprentissage renforcement recompense,"**Reinforcement learning** trains an agent by trial and error: it acts, receives rewards or penalties, and learns a policy that maximises long-term reward. *(FR : apprentissage par renforcement.)*"
+kb_neural_network,neural network networks neurons layers perceptron reseau reseaux neurones couches,A **neural network** stacks layers of simple units: each computes a weighted sum of its inputs and applies an activation function. Training adjusts the weights to reduce error. *(FR : réseau de neurones.)*
+kb_deep_learning,deep learning cnn rnn lstm convolutional recurrent apprentissage profond,"**Deep learning** uses neural networks with many layers. CNNs excel on images, RNNs/LSTMs on sequences, and transformers on language. *(FR : apprentissage profond.)*"
+kb_overfitting,overfitting overfit underfitting underfit sur apprentissage surapprentissage,"**Overfitting**: a model memorises training data, noise included, and fails on new data. Remedies: more data, simpler models, regularisation, early stopping. Underfitting is the opposite: too simple to capture the pattern. *(FR : sur-apprentissage.)*"
+kb_train_test,train test split validation cross entrainement jeu,"Keep a **test set** the model never sees during training (often 20%) to measure real performance. A validation set tunes settings, and k-fold cross-validation rotates the splits for steadier estimates. *(FR : jeu d’entraînement, jeu de test.)*"
+kb_gradient_descent,gradient descent learning rate loss optimizer descente,"**Gradient descent** minimises a loss by repeatedly stepping against its gradient: θ ← θ − η·∇L(θ), where η is the learning rate. Too large a step diverges; too small is slow. *(FR : descente de gradient.)*"
+kb_backprop,backpropagation backprop retropropagation,"**Backpropagation** computes each weight’s gradient by applying the chain rule backwards from the output layer, so gradient descent can update every layer. *(FR : rétropropagation.)*"
+kb_kmeans,means kmeans clustering centroids centroid,"**k-means** picks k centroids, assigns each point to the nearest one, recomputes each centroid as the mean of its points, and repeats until assignments stop changing."
+kb_trees,decision tree trees random forest forests arbre arbres foret aleatoire,"A **decision tree** splits data with successive yes/no questions on features. A **random forest** averages many trees trained on random samples and feature subsets, which reduces overfitting. *(FR : arbre de décision, forêt aléatoire.)*"
+kb_linear_regression,linear regression least squares lineaire droite,"**Linear regression** fits y = w·x + b by minimising the sum of squared errors, giving a line (or plane) through the data. *(FR : régression linéaire.)*"
+kb_logistic,logistic regression sigmoid binary classifier logistique,**Logistic regression** is a classifier: it passes a linear score through the sigmoid σ(z) = 1/(1+e⁻ᶻ) to get a probability between 0 and 1. *(FR : régression logistique.)*
+kb_metrics,accuracy precision recall f1 score confusion matrix metrics rappel,"Accuracy = correct ÷ total. Precision = TP ÷ (TP+FP). Recall = TP ÷ (TP+FN). F1 = 2·P·R ÷ (P+R). A confusion matrix counts TP, FP, FN and TN. Accuracy misleads on imbalanced data. *(FR : précision, rappel.)*"
+kb_nlp,nlp natural language processing traitement langage naturel,"**Natural language processing** lets programs work with human language: tokenization, stemming, search, classification, translation, question answering. *(FR : traitement automatique du langage, TAL.)*"
+kb_tokenization,tokenization tokenisation tokens token tokenizer,"**Tokenization** splits text into units (words, sub-words or characters) that a program can count or feed to a model."
+kb_stemming,stemming lemmatization stem lemma racinisation lemmatisation,**Stemming** chops word endings with rules (running → run). **Lemmatization** uses a dictionary to return the proper base form (better → good). Stemming is faster; lemmatization is more accurate.
+kb_tfidf,tf idf tfidf term frequency inverse document,"**TF-IDF** weights a word by how often it appears in a document (TF) and how rare it is across all documents (IDF): tf × log(N/df). Common words get low weight, distinctive words high weight."
+kb_bm25,bm25 okapi ranking function retrieval,**BM25** is a ranking function for search. It improves on TF-IDF with term-frequency saturation (parameter k1) and document-length normalisation (parameter b).
+kb_cosine,cosine similarity vectors angle similarite cosinus,"**Cosine similarity** compares two vectors by the angle between them: cos θ = A·B / (‖A‖‖B‖). It is 1 for identical direction and 0 for unrelated non-negative vectors, regardless of length. *(FR : similarité cosinus.)*"
+kb_levenshtein,levenshtein edit distance fuzzy matching,"**Levenshtein distance** is the minimum number of single-character insertions, deletions or substitutions needed to turn one word into another. It powers typo-tolerant matching. *(FR : distance d’édition.)*"
+kb_embeddings,embeddings embedding vectors word2vec plongement semantic,**Embeddings** map words or documents to vectors so that similar meanings sit close together; similarity is then measured with cosine or dot product. *(FR : plongements lexicaux.)*
+kb_transformer,transformer transformers attention bert self architecture,"The **transformer** (2017) is a neural architecture built on self-attention, which lets every token weigh every other token. It underlies BERT, GPT and most modern LLMs."
+kb_llm,llm llms large language model models grand modele langage,"A **large language model** is a transformer trained on huge amounts of text to predict the next token; with scale it can answer, summarise, translate and write code. It can also be confidently wrong. *(FR : grand modèle de langage.)*"
+kb_hallucination,hallucination hallucinations hallucinate invented fabricated false facts,A **hallucination** is a fluent but false or unsupported statement from a generative model. Reduce it by grounding answers in sources and checking the citations.
+kb_prompt,prompt prompts prompting engineering instructions,"A **prompt** is the input given to a language model. Good prompts state the task, context, format and constraints, and may include examples."
+kb_rag,rag retrieval augmented generation,"**Retrieval-augmented generation** first retrieves relevant passages (with search such as BM25 or embeddings), then gives them to an LLM to write an answer grounded in them. Astra’s document mode does the retrieval step only."
+kb_fine_tuning,fine tuning finetune pretrained pretraining transfer,"**Fine-tuning** continues training a pretrained model on a smaller, task-specific dataset. It reuses what the model already learned (transfer learning). *(FR : réglage fin.)*"
+kb_bias,bias biases fairness ethics discrimination biais equite ethique,"**Bias** in AI means systematically skewed results, often inherited from unrepresentative data or labels. Counter it with diverse data, audits across groups, and human oversight. *(FR : biais, équité, éthique.)*"
+kb_hyperparameters,hyperparameter hyperparameters epoch epochs batch tuning hyperparametre,"**Hyperparameters** are settings chosen before training (learning rate, tree depth, layers). An **epoch** is one full pass over the training set; a **batch** is the subset used for each update."
+kb_scaling,normalization standardization scaling feature min max score normalisation,"**Min-max normalisation** rescales to [0, 1]: (x − min)/(max − min). **Standardisation** centres and scales: (x − μ)/σ. Scaling helps distance-based and gradient-based models. *(FR : normalisation.)*"
+kb_activation,activation function relu sigmoid tanh softmax,"An **activation function** adds non-linearity. ReLU = max(0, x); sigmoid squashes to (0, 1); tanh to (−1, 1); softmax turns scores into probabilities that sum to 1."
+kb_generative_ai,generative ai genai gan diffusion generation ia generative,"**Generative AI** creates new content (text, images, audio, code). Main families: transformers/LLMs for text, diffusion models for images, and GANs, where a generator and a discriminator compete. *(FR : IA générative.)*"
+kb_turing,turing test alan imitation game,The **Turing test** (1950) asks whether a machine’s conversation can be told apart from a human’s. Alan Turing proposed it as the imitation game.
+kb_algorithm,algorithm algorithms algorithme algorithmes,"An **algorithm** is a finite, unambiguous sequence of steps that solves a problem or computes a result."
+kb_heuristic,heuristic heuristics rule thumb heuristique,"A **heuristic** is a practical rule that finds a good-enough answer quickly, without guaranteeing the best one. Astra’s keyword matching is a transparent heuristic."
+kb_deterministic,deterministic determinism probabilistic stochastic random deterministe,"A **deterministic** process always gives the same output for the same input (arithmetic, Astra’s rules). A **probabilistic** one involves randomness or uncertainty, like LLM sampling. *(FR : déterministe.)*"
+kb_python,python language programming interpreter,"**Python** is a readable, high-level programming language created by Guido van Rossum (first released 1991). Indentation defines blocks, and it dominates data science and AI."
+kb_python_libs,numpy pandas scikit learn sklearn matplotlib pytorch tensorflow jupyter libraries bibliotheques,"Common Python AI libraries: **NumPy** (arrays), **pandas** (tables), **matplotlib** (plots), **scikit-learn** (classical ML), **PyTorch** and **TensorFlow** (deep learning), **Jupyter** (notebooks)."
+kb_api,api apis application programming interface rest endpoint,"An **API** is a contract that lets one program use another’s features. A REST API exposes URLs (endpoints) you call over HTTP, usually exchanging JSON."
+kb_data_formats,json csv xml data format formats,"**JSON** stores nested key/value data as text, **CSV** stores rows of comma-separated values, and **XML** uses tags. Astra reads CSV for its dataset and exports JSON for your chats."
+kb_web_stack,html css javascript web frontend languages,"**HTML** gives a page its structure, **CSS** its style, and **JavaScript** its behaviour. JavaScript is unrelated to Java despite the name."
+kb_indexeddb,indexeddb localstorage browser storage database,"**IndexedDB** is the browser’s built-in transactional database for large structured data, unlike localStorage’s small synchronous string store. Astra keeps chats and documents there."
+kb_regex,regex regexp regular expression expressions reguliere regulieres pattern,"A **regular expression** is a compact pattern for matching text, e.g. `\d+` matches digits and `^a` matches text starting with a. *(FR : expression régulière.)*"
+kb_sql,sql database query select relational databases requete base donnees,"**SQL** is the language for querying relational databases, e.g. `SELECT name FROM users WHERE age > 30`."
+kb_git,git github version control commit branch repository,**Git** is a distributed version-control system (created by Linus Torvalds in 2005) that records changes as commits and lets you work on branches. GitHub hosts Git repositories.
+kb_http,http https url protocol status codes 404 200 500,"**HTTP** is the web’s request/response protocol. Common status codes: 200 OK, 301 redirect, 403 forbidden, 404 not found, 500 server error. HTTPS adds encryption."
+kb_security,encryption hash hashing password cryptography chiffrement hachage,**Encryption** is reversible with a key; a **hash** is a one-way fingerprint. Never store plain-text passwords: store salted hashes from a slow algorithm such as bcrypt or Argon2.
+kb_hardware,cpu gpu ram ssd hardware processor memory,"The **CPU** runs general instructions, the **GPU** runs many simple operations in parallel (ideal for neural networks), **RAM** is fast temporary memory, and an **SSD** is persistent storage."
+kb_recursion,recursion recursive recursivite,"**Recursion** is when a function calls itself on a smaller case until it reaches a base case, e.g. factorial: n! = n × (n−1)!, with 0! = 1."
+kb_gdpr,gdpr rgpd data protection,"The **GDPR** (RGPD in French) is the EU’s data-protection regulation, applicable since 25 May 2018. It gives people rights over their personal data, such as access, correction and erasure."
+kb_capital_generic,capital capitale capitals,"Which country? Ask, for example, *capital of Japan*. I know about fifty capitals offline; for others I can ask Wikipedia if you approve."
+kb_capital_france,capital capitale country pays france france paris,The capital of France is **Paris**. *(Capitale : Paris.)*
+kb_capital_germany,capital capitale country pays germany allemagne berlin,The capital of Germany is **Berlin**. *(Capitale : Berlin.)*
+kb_capital_spain,capital capitale country pays spain espagne madrid,The capital of Spain is **Madrid**. *(Capitale : Madrid.)*
+kb_capital_italy,capital capitale country pays italy italie rome,The capital of Italy is **Rome**. *(Capitale : Rome.)*
+kb_capital_portugal,capital capitale country pays portugal portugal lisbon,The capital of Portugal is **Lisbon**. *(Capitale : Lisbonne.)*
+kb_capital_united_kingdom,capital capitale country pays united kingdom uk britain england royaume uni angleterre grande bretagne london,The capital of the United Kingdom is **London**. *(Capitale : Londres.)*
+kb_capital_ireland,capital capitale country pays ireland irlande dublin,The capital of Ireland is **Dublin**. *(Capitale : Dublin.)*
+kb_capital_belgium,capital capitale country pays belgium belgique brussels,The capital of Belgium is **Brussels**. *(Capitale : Bruxelles.)*
+kb_capital_netherlands,capital capitale country pays netherlands holland pays bas hollande amsterdam,The capital of the Netherlands is **Amsterdam**; the government sits in The Hague. *(Capitale : Amsterdam ; gouvernement à La Haye.)*
+kb_capital_switzerland,capital capitale country pays switzerland suisse bern,The capital of Switzerland is **Bern**. *(Capitale : Berne.)*
+kb_capital_austria,capital capitale country pays austria autriche vienna,The capital of Austria is **Vienna**. *(Capitale : Vienne.)*
+kb_capital_poland,capital capitale country pays poland pologne warsaw,The capital of Poland is **Warsaw**. *(Capitale : Varsovie.)*
+kb_capital_sweden,capital capitale country pays sweden suede stockholm,The capital of Sweden is **Stockholm**. *(Capitale : Stockholm.)*
+kb_capital_norway,capital capitale country pays norway norvege oslo,The capital of Norway is **Oslo**. *(Capitale : Oslo.)*
+kb_capital_denmark,capital capitale country pays denmark danemark copenhagen,The capital of Denmark is **Copenhagen**. *(Capitale : Copenhague.)*
+kb_capital_finland,capital capitale country pays finland finlande helsinki,The capital of Finland is **Helsinki**. *(Capitale : Helsinki.)*
+kb_capital_greece,capital capitale country pays greece grece athens,The capital of Greece is **Athens**. *(Capitale : Athènes.)*
+kb_capital_turkey,capital capitale country pays turkey turquie ankara,The capital of Turkey is **Ankara**. *(Capitale : Ankara.)*
+kb_capital_russia,capital capitale country pays russia russie moscow,The capital of Russia is **Moscow**. *(Capitale : Moscou.)*
+kb_capital_ukraine,capital capitale country pays ukraine ukraine kyiv,The capital of Ukraine is **Kyiv**. *(Capitale : Kiev.)*
+kb_capital_united_states,capital capitale country pays united states usa america etats unis amerique washington dc,"The capital of the United States is **Washington, D.C.**. *(Capitale : Washington.)*"
+kb_capital_canada,capital capitale country pays canada canada ottawa,The capital of Canada is **Ottawa**. *(Capitale : Ottawa.)*
+kb_capital_mexico,capital capitale country pays mexico mexique mexico city,The capital of Mexico is **Mexico City**. *(Capitale : Mexico.)*
+kb_capital_brazil,capital capitale country pays brazil bresil brasilia,The capital of Brazil is **Brasília**. *(Capitale : Brasilia.)*
+kb_capital_argentina,capital capitale country pays argentina argentine buenos aires,The capital of Argentina is **Buenos Aires**. *(Capitale : Buenos Aires.)*
+kb_capital_chile,capital capitale country pays chile chili santiago,The capital of Chile is **Santiago**. *(Capitale : Santiago.)*
+kb_capital_colombia,capital capitale country pays colombia colombie bogota,The capital of Colombia is **Bogotá**. *(Capitale : Bogota.)*
+kb_capital_peru,capital capitale country pays peru perou lima,The capital of Peru is **Lima**. *(Capitale : Lima.)*
+kb_capital_china,capital capitale country pays china chine beijing,The capital of China is **Beijing**. *(Capitale : Pékin.)*
+kb_capital_japan,capital capitale country pays japan japon tokyo,The capital of Japan is **Tokyo**. *(Capitale : Tokyo.)*
+kb_capital_south_korea,capital capitale country pays south korea coree du sud seoul,The capital of South Korea is **Seoul**. *(Capitale : Séoul.)*
+kb_capital_india,capital capitale country pays india inde new delhi,The capital of India is **New Delhi**. *(Capitale : New Delhi.)*
+kb_capital_thailand,capital capitale country pays thailand thailande bangkok,The capital of Thailand is **Bangkok**. *(Capitale : Bangkok.)*
+kb_capital_vietnam,capital capitale country pays vietnam vietnam hanoi,The capital of Vietnam is **Hanoi**. *(Capitale : Hanoï.)*
+kb_capital_pakistan,capital capitale country pays pakistan pakistan islamabad,The capital of Pakistan is **Islamabad**. *(Capitale : Islamabad.)*
+kb_capital_iran,capital capitale country pays iran iran tehran,The capital of Iran is **Tehran**. *(Capitale : Téhéran.)*
+kb_capital_saudi_arabia,capital capitale country pays saudi arabia arabie saoudite riyadh,The capital of Saudi Arabia is **Riyadh**. *(Capitale : Riyad.)*
+kb_capital_australia,capital capitale country pays australia australie canberra,The capital of Australia is **Canberra**. *(Capitale : Canberra.)*
+kb_capital_new_zealand,capital capitale country pays new zealand nouvelle zelande wellington,The capital of New Zealand is **Wellington**. *(Capitale : Wellington.)*
+kb_capital_egypt,capital capitale country pays egypt egypte cairo,The capital of Egypt is **Cairo**. *(Capitale : Le Caire.)*
+kb_capital_morocco,capital capitale country pays morocco maroc rabat,The capital of Morocco is **Rabat**. *(Capitale : Rabat.)*
+kb_capital_algeria,capital capitale country pays algeria algerie algiers,The capital of Algeria is **Algiers**. *(Capitale : Alger.)*
+kb_capital_tunisia,capital capitale country pays tunisia tunisie tunis,The capital of Tunisia is **Tunis**. *(Capitale : Tunis.)*
+kb_capital_nigeria,capital capitale country pays nigeria nigeria abuja,The capital of Nigeria is **Abuja**. *(Capitale : Abuja.)*
+kb_capital_kenya,capital capitale country pays kenya kenya nairobi,The capital of Kenya is **Nairobi**. *(Capitale : Nairobi.)*
+kb_capital_czech_republic,capital capitale country pays czech republic czechia tchequie republique tcheque prague,The capital of Czechia is **Prague**. *(Capitale : Prague.)*
+kb_capital_hungary,capital capitale country pays hungary hongrie budapest,The capital of Hungary is **Budapest**. *(Capitale : Budapest.)*
+kb_capital_romania,capital capitale country pays romania roumanie bucharest,The capital of Romania is **Bucharest**. *(Capitale : Bucarest.)*
+kb_capital_luxembourg,capital capitale country pays luxembourg luxembourg luxembourg city,The capital of Luxembourg is **Luxembourg City**. *(Capitale : Luxembourg.)*
+kb_capital_south_africa,capital capitale country pays south africa afrique du sud pretoria cape town bloemfontein,"South Africa has three capitals: **Pretoria** (executive), **Cape Town** (legislative) and **Bloemfontein** (judicial). *(Capitales : Pretoria, Le Cap, Bloemfontein.)*"
+routing_algorithms,routing algorithm algorithms classify classification method choose decision pipeline bm25 tfidf levenshtein recursive descent feature extraction,"Astra’s router uses feature extraction, a safe recursive-descent math parser, BM25, TF-IDF cosine similarity, Levenshtein typo tolerance and weighted route scoring. The LLM is a fallback, not the default."
+browser_first,browser first local locally device run client side privacy confidentiality control data sovereignty,"Most of Astra runs inside your browser: routing, calculations, astra.csv matching, file extraction, passage indexing and document retrieval. Web and LLM calls are separately permission-gated."
+resource_savings,energy water ecological ecology environment savings remote calls avoided footprint,Astra avoids remote inference when a local algorithm can answer reliably. The counter records locally answered requests; water and energy use the displayed published benchmark and are not direct data-centre telemetry.
+file_pipeline,file import extraction indexing chunk chunks process pdf docx pptx xlsx ods evidence,File pipeline: select a supported file → extract text locally → mark pages/slides/sheets → split into passages → build BM25 and TF-IDF indexes → ask permission before retrieval → cite the best passages.
