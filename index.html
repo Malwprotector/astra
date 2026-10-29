@@ -4022,7 +4022,7 @@ function render() {
   l.innerHTML = '';
   if (!c.m.length) {
     l.innerHTML =
-      `<div class="em"><div class="br big">A<i>//</i></div><p>Astra analyses first, then chooses the best technology to suit your needs.<br>Designed to minimise resource consumption as much as possible.<br>Astra is developed by <a href="https://phoen.org">phoen.org</a>.</p><div class="ch">${['2*(3+4)^2','x^2-5x+6=0','Who are you?'].map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div></div>`;
+      `<div class="em"><div class="br big">A<i>//</i></div><p>Astra analyses first, then chooses the best technology to suit your needs.<br>Astra doesn't depend on LLMS. Designed to minimise resource consumption as much as possible.<br>Astra is developed by <a href="https://phoen.org">phoen.org</a>.</p><div class="ch">${['2*(3+4)^2','x^2-5x+6=0','Who are you?'].map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div></div>`;
     return
   }
   c.m.forEach((m, i) => l.append(mEl(m, i, i == c.m.length - 1)));
