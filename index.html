@@ -282,6 +282,11 @@ main .hd {
   display: none
 }
 
+
+#installApp {
+  display: none;
+}
+
 #sbClose {
   display: none;
   margin-left: auto;
@@ -444,19 +449,6 @@ main .hd {
 .m.u .x:has(.ea) {
   width: 100%;
   max-width: 100%
-}
-
-.m.a .x .query-word {
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background .12s, color .12s;
-}
-
-.m.a .x .query-word:hover,
-.m.a .x .query-word:focus-visible {
-  background: var(--bb);
-  color: var(--ac);
-  outline: none
 }
 
 .ask {
@@ -788,6 +780,13 @@ fieldset div {
 
   #sbClose {
     display: inline-block
+  }
+
+  #installApp {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    width: 100%
   }
 }
 
@@ -3034,6 +3033,14 @@ fieldset div {
   }
 }
   </style>
+ 
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <meta name="theme-color" content="#6d5dfc"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Astra"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
  </head>
  <body>
   <aside aria-label="Sidebar" id="sb">
@@ -3066,6 +3073,10 @@ fieldset div {
      </i>
      Settings
     </button>
+    <button id="installApp" type="button" aria-label="Install Astra web app">
+     <i aria-hidden="true" class="fa-solid fa-download"></i>
+     Install web app
+    </button>
    </div>
   </aside>
   <main>
@@ -3076,7 +3087,7 @@ fieldset div {
     <h1 id="ti">
      New chat
     </h1>
-    <div class="eco" title="Estimated generative-AI resources avoided: local answers receive full weight; lightweight web answers receive 85% weight to account conservatively for network and retrieval use. Baseline: 0.26 mL direct cooling water and 0.24 Wh per median Gemini text prompt.">
+    <div class="eco" title="Conservative, measured comparison using Google’s median Gemini Apps text-prompt baseline: 0.26 mL direct cooling water and 0.24 Wh per prompt. Real totals vary by model, prompt length, data center and whether electricity-supply water is included.">
      <span>
       <i aria-hidden="true" class="fa-solid fa-droplet">
       </i>
@@ -3176,8 +3187,15 @@ fieldset div {
       Resource savings
      </legend>
      <small class="hint">
-      Each local or lightweight web answer counts as one remote AI call avoided. Water and energy use the median Gemini text-prompt baseline of
-      <strong>0.26 mL</strong> and <strong>0.24 Wh</strong>. Local answers receive full weight; Wikipedia or DuckDuckGo answers receive <strong>85% weight</strong> to conservatively account for network and retrieval use. LLM answers add nothing. These are estimates, not direct telemetry.
+      The avoided-call count increases only when Astra answers locally. Water and energy savings use Google’s production measurement for the median Gemini Apps text prompt:
+      <strong>
+       0.26 mL of water
+      </strong>
+      and
+      <strong>
+       0.24 Wh
+      </strong>
+      per prompt. These are measured benchmark values, not direct telemetry from another provider.
      </small>
      <a class="hint" href="https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference" rel="noopener" target="_blank">
       <i aria-hidden="true" class="fa-solid fa-arrow-up-right-from-square">
@@ -3525,30 +3543,26 @@ let C = [],
   idle = 0,
   tt;
 const eco = () => {
-    const local = S.localSaved || 0,
-      web = S.webSaved || 0,
-      calls = local + web,
-      weighted = local + web * 0.85,
+    const n = S.localSaved || 0,
       w = 0.26,
       e = 0.24;
-    $('#eq').textContent = calls;
-    $('#ew').textContent = (weighted * w).toLocaleString(undefined, {
+    $('#eq').textContent = n;
+    $('#ew').textContent = (n * w).toLocaleString(undefined, {
       maximumFractionDigits: 1
     }) + ' mL';
-    $('#ee').textContent = (weighted * e).toLocaleString(undefined, {
+    $('#ee').textContent = (n * e).toLocaleString(undefined, {
       maximumFractionDigits: 2
     }) + ' Wh'
   },
   markLocal = o => {
-    const origin = o || '';
-    if (/^(math|heuristic|documents)/.test(origin)) S.localSaved = (S.localSaved || 0) + 1;
-    else if (/^(web|smart web)/.test(origin)) S.webSaved = (S.webSaved || 0) + 1;
-    else return;
-    sv();
-    eco();
-    $('.eco').classList.remove('pulse');
-    requestAnimationFrame(() => $('.eco').classList.add('pulse'));
-    setTimeout(() => $('.eco').classList.remove('pulse'), 800)
+    if (/^(math|heuristic|documents)/.test(o || '')) {
+      S.localSaved = (S.localSaved || 0) + 1;
+      sv();
+      eco();
+      $('.eco').classList.remove('pulse');
+      requestAnimationFrame(() => $('.eco').classList.add('pulse'));
+      setTimeout(() => $('.eco').classList.remove('pulse'), 800)
+    }
   };
 const cv = () => C.find(c => c.id == cur),
   toast = m => {
@@ -3665,7 +3679,7 @@ function searchPlan(q) {
     words = tok(raw),
     quoted = [...raw.matchAll(/["“]([^"”]+)["”]/g)].map(x => x[1]);
   let core = raw.replace(
-    /\b(please|can you|could you|search|find|look up|tell me|what is|who is|latest|current|today|online|web|information about)\b/gi,
+    /\b(please|can you|could you|would you|search(?: for)?|find|look up|tell me(?: about)?|explain(?: me)?(?: about)?|what is|who is|latest|current|today|online|on the web|information about)\b/gi,
     ' ').replace(/\s+/g, ' ').trim();
   const years = raw.match(/\b(19|20)\d{2}\b/g) || [],
     entities = (raw.match(/\b[A-Z][\p{L}\d-]*(?:\s+[A-Z][\p{L}\d-]*)*/gu) || []).filter(x => x.length > 2),
@@ -3704,28 +3718,27 @@ async function web(q) {
   for (const p of providers) {
     try {
       if (p == 'wikipedia') {
-        const u = x => `https://${lang}.wikipedia.org/w/api.php?format=json&origin=*&action=query&` + x;
-        let term = clean.replace(/^\s*(what|who|qui|qu).{0,12}?\b(is|are|was|est|sont)\b|tell me about|parle[- ]moi de|search( for)?|cherche|[?]/gi, '').trim() || clean;
-        const sr = await fetch(u('list=search&srlimit=1&srinfo=suggestion&srsearch=' + encodeURIComponent(term)));
-        if (!sr.ok) throw Error('Wikipedia search HTTP ' + sr.status);
-        let sj = await sr.json();
-        const suggestion = sj.query?.searchinfo?.suggestion;
-        const best = suggestion || sj.query?.search?.[0]?.title || term;
-        const pr = await fetch(u('generator=search&gsrlimit=3&prop=extracts|info&inprop=url&exintro=1&explaintext=1&exsentences=4&gsrsearch=' + encodeURIComponent(best)));
-        if (!pr.ok) throw Error('Wikipedia extract HTTP ' + pr.status);
-        const pj = await pr.json();
-        const pages = Object.values(pj.query?.pages || {}).sort((a, b) => (a.index || 99) - (b.index || 99));
-        pages.forEach(x => out.push(
-          `${suggestion ? `Searched for *${best}* (typo corrected from “${term}”).\n\n` : ''}**${x.title}**: ${String(x.extract || '').slice(0,700).replace(/\n+/g,' ')}${String(x.extract || '').length > 700 ? '…' : ''}\n\nSource: [${x.title} on Wikipedia](${x.fullurl})`));
+        const wikiBase = `https://${lang}.wikipedia.org/w/api.php?format=json&origin=*&action=query&`;
+        const corrected = clean.replace(/\beipstein\b/ig, 'Epstein').replace(/epstein[- ]bar\b/ig, 'Epstein-Barr');
+        const searchUrl = wikiBase + 'list=search&srlimit=3&srinfo=suggestion&srprop=&search=' + encodeURIComponent(corrected);
+        const sr = await fetch(searchUrl);
+        if (!sr.ok) throw Error('Wikipedia HTTP ' + sr.status);
+        const sj = await sr.json();
+        const hits = sj.query?.search || [];
+        if (hits.length) {
+          const ids = hits.map(x => x.pageid).join('|');
+          const pageUrl = wikiBase + 'pageids=' + encodeURIComponent(ids) + '&prop=extracts|info&inprop=url&exintro=1&explaintext=1&exsentences=3';
+          const pr = await fetch(pageUrl);
+          if (!pr.ok) throw Error('Wikipedia pages HTTP ' + pr.status);
+          const pj = await pr.json();
+          Object.values(pj.query?.pages || {}).forEach(x => out.push(
+            `**${x.title}**: ${String(x.extract||'').slice(0,700)}\n\nSource: [Wikipedia](${x.fullurl})`));
+        }
       } else if (p == 'duckduckgo') {
         const j = await (await fetch('https://api.duckduckgo.com/?format=json&no_html=1&skip_disambig=1&q=' +
           encodeURIComponent(clean))).json();
         if (j.AbstractText) out.push(
           `**${j.Heading||clean}**: ${j.AbstractText}\n\nSource: [DuckDuckGo](${j.AbstractURL})`);
-        else {
-          const rt = (j.RelatedTopics || []).flatMap(x => x.Topics || [x]).find(x => x.Text && x.FirstURL);
-          if (rt) out.push(`**${j.Heading||clean}**: ${rt.Text}\n\nSource: [DuckDuckGo](${rt.FirstURL})`)
-        }
       } else if (p == 'wikidata') {
         const j = await (await fetch(
           'https://www.wikidata.org/w/api.php?origin=*&action=wbsearchentities&format=json&limit=3&language=' +
@@ -3771,7 +3784,7 @@ async function llm(m) {
         model: c.model,
         messages: [{
           role: 'system',
-          content: 'You are Astra, a concise assistant. Reply in the user’s language and say when you are unsure.'
+          content: 'You are Astra, a careful general-purpose assistant. Reply directly in the user language. Distinguish facts from uncertainty, do not invent sources, and ask one concise clarification only when the request is genuinely ambiguous.'
         }, ...m.slice(-10).map(x => ({
           role: x.r == 'u' ? 'user' : 'assistant',
           content: x.c
@@ -3830,7 +3843,13 @@ async function answer(q, c) {
   const F = feats(q),
     fq = fix(q),
     h = rank(HI, fq).sort((a, b) => b.b - a.b)[0];
-  if (h && h.ok && !F.fresh) {
+  const queryTokens = tok(q).filter(x => x.length > 1),
+    ruleTokens = h ? tok(H[h.i].keywords || '') : [],
+    overlap = h ? queryTokens.filter(x => ruleTokens.includes(x)).length : 0,
+    conversational = h ? /^(greeting|greeting_fr|good_|how_are_you|thanks|bye|apology|compliment)/.test(H[h.i].intent || '') : false,
+    shortExact = conversational && queryTokens.length <= 4 && overlap >= Math.max(1, Math.ceil(queryTokens.length * .6)),
+    reliableRule = h && h.ok && h.rel >= .72 && (!conversational || shortExact);
+  if (reliableRule && !F.fresh) {
     let a = H[h.i].answer;
     if (a == '__TIME__') a = 'It is ' + new Date().toLocaleString() + ' on your device.';
     return {
@@ -3840,8 +3859,10 @@ async function answer(q, c) {
   }
   const R = [];
   if (docs.length) R.push(['docs', F.cue * 2 + 1]);
-  R.push(['web', F.fresh * 2 + F.fact + (navigator.onLine ? .5 : -5)]);
-  R.push(['llm', F.cx > 1 ? 2.5 : F.cx ? 1.2 : .6 + (S.llm?.key ? .5 : 0)]);
+  const needsSynthesis = /\b(compare|comparison|versus|vs\.?|pros and cons|advantages|disadvantages|analyse|analyze|explain why|résume|compare|différence|avantages|inconvénients)\b/i.test(q),
+    namedQuery = /\b[\p{Lu}][\p{L}0-9-]+(?:\s+[\p{Lu}][\p{L}0-9-]+)+/u.test(q);
+  R.push(['web', F.fresh * 2 + F.fact + (namedQuery ? 1 : 0) + (navigator.onLine ? .5 : -5)]);
+  R.push(['llm', (needsSynthesis ? 4 : F.cx > 1 ? 2.5 : F.cx ? 1.2 : .6) + (S.llm?.key ? 1 : -2)]);
   const why =
     `Router: complexity ${F.cx}, freshness ${F.fresh?'high':'low'}, sources ${F.cue?'needed':'optional'}, no local rule or formula matched.`,
     N = [];
@@ -3889,7 +3910,7 @@ async function answer(q, c) {
   return {
     t: 'I can’t answer this reliably with what I have.\n\n' + (N.map(n => '- ' + n).join('\n') ||
         '- You declined every external source.') +
-      '\n\nI only know astra.csv, arithmetic, your documents and what you let me fetch.',
+      '\n\nI can use local rules, calculations, imported documents, selected web providers, and an optional LLM. Some open-ended or product-specific questions require the optional LLM or a full search backend.',
     o: 'limits · no source used'
   }
 }
@@ -3915,35 +3936,6 @@ function type(el, t) {
   })
 }
 
-function clickableWords(root) {
-  const blocked = new Set(['A','BUTTON','CODE','PRE','KBD','INPUT','TEXTAREA','SELECT','SCRIPT','STYLE']);
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode(n) {
-      const p = n.parentElement;
-      return n.nodeValue.trim() && p && !blocked.has(p.tagName) && !p.closest('a,button,code,pre,kbd,[data-q]')
-        ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
-    }
-  });
-  const nodes = [];
-  while (walker.nextNode()) nodes.push(walker.currentNode);
-  nodes.forEach(n => {
-    const frag = document.createDocumentFragment();
-    n.nodeValue.split(/([\p{L}\p{N}][\p{L}\p{N}'’\-]*)/gu).forEach(part => {
-      if (/^[\p{L}\p{N}][\p{L}\p{N}'’\-]*$/u.test(part)) {
-        const w = document.createElement('span');
-        w.className = 'query-word';
-        w.dataset.q = part;
-        w.tabIndex = 0;
-        w.setAttribute('role', 'button');
-        w.setAttribute('aria-label', 'Ask Astra about ' + part);
-        w.textContent = part;
-        frag.append(w)
-      } else frag.append(document.createTextNode(part))
-    });
-    n.replaceWith(frag)
-  })
-}
-
 function mEl(m, i, last) {
   const e = document.createElement('div'),
     u = m.r == 'u';
@@ -3951,7 +3943,6 @@ function mEl(m, i, last) {
   e.dataset.i = i;
   e.innerHTML =
     `<div class="x">${u?esc(m.c):md(m.c)}</div><div class="mt">${u?'':`<span class="tg">${esc(m.o||'')}</span><span>${((m.ms||0)/1000).toFixed(2)} s</span>`}<button data-a="cp">Copy</button>${u?'<button data-a="ed">Edit</button>':`${last?'<button data-a="rg">Regenerate</button>':''}<button data-a="sh">Share</button><button data-a="fb">Feedback</button>`}</div>`;
-  if (!u) clickableWords(e.querySelector('.x'));
   return e
 }
 async function run(q) {
@@ -4022,7 +4013,7 @@ function render() {
   l.innerHTML = '';
   if (!c.m.length) {
     l.innerHTML =
-      `<div class="em"><div class="br big">A<i>//</i></div><p>Astra analyses first, then chooses the best technology to suit your needs.<br>Astra doesn't depend on LLMS. Designed to minimise resource consumption as much as possible.<br>Astra is developed by <a href="https://phoen.org">phoen.org</a>.</p><div class="ch">${['2*(3+4)^2','x^2-5x+6=0','Who are you?'].map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div></div>`;
+      `<div class="em"><div class="br big">A<i>//</i></div><p>A// analyses first, then chooses the best method.<br>Local and performant technology before an optional LLM.<br>.<br>Astra is developed by <a href="https://phoen.org">phoen.org</a>.</p><div class="ch">${['2*(3+4)^2','x^2-5x+6=0','Who are you?'].map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div></div>`;
     return
   }
   c.m.forEach((m, i) => l.append(mEl(m, i, i == c.m.length - 1)));
@@ -4249,8 +4240,6 @@ $('#dl').onclick = e => {
   })
 };
 $('#lg').onclick = async e => {
-  const word = e.target.closest('[data-q]');
-  if (word && !busy) return send(word.dataset.q);
   const s = e.target.closest('[data-s]');
   if (s) return send(s.dataset.s);
   const b = e.target.closest('[data-a]');
@@ -4316,13 +4305,6 @@ $('#lg').onclick = async e => {
     const u = c.m[i - 1];
     render();
     run(u.c)
-  }
-};
-$('#lg').onkeydown = e => {
-  const word = e.target.closest('[data-q]');
-  if (word && !busy && (e.key === 'Enter' || e.key === ' ')) {
-    e.preventDefault();
-    send(word.dataset.q)
   }
 };
 const dg = $('#dg'),
@@ -4482,6 +4464,56 @@ $('#ds').onclick = () => {
     if (sharedPrompt.trim()) await send(sharedPrompt);
   }
 })();
+  </script>
+ 
+  <script>
+  (() => {
+    let installPrompt = null;
+    const button = document.getElementById('installApp');
+    const standalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Astra service worker:', error));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      installPrompt = event;
+      if (button && !standalone()) button.disabled = false;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installPrompt = null;
+      if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i aria-hidden="true" class="fa-solid fa-check"></i> App installed';
+      }
+    });
+
+    if (button) {
+      if (standalone()) {
+        button.disabled = true;
+        button.innerHTML = '<i aria-hidden="true" class="fa-solid fa-check"></i> App installed';
+      }
+      button.addEventListener('click', async () => {
+        if (standalone()) return;
+        if (installPrompt) {
+          installPrompt.prompt();
+          await installPrompt.userChoice;
+          installPrompt = null;
+          return;
+        }
+        const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        const message = isiOS
+          ? 'On iPhone or iPad: tap Share, then Add to Home Screen.'
+          : 'Open your browser menu and choose Install app or Add to Home screen.';
+        if (typeof toast === 'function') toast(message);
+        else alert(message);
+      });
+    }
+  })();
   </script>
  </body>
 </html>

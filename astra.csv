@@ -1,8 +1,8 @@
 intent,keywords,answer
 greeting,hello hi hey hiya howdy greetings hola yo there astra helo hallo,"Hello! I’m Astra. I can calculate, answer basics, search documents you attach, and ask Wikipedia or an LLM when you allow it. What would you like to do?"
 greeting_fr,bonjour salut coucou bonsoir allo astra,"Bonjour ! Je suis Astra. Je peux calculer, répondre aux bases, chercher dans vos documents et interroger Wikipédia ou un LLM avec votre accord. Que puis-je faire pour vous ?"
-good_morning,good morning afternoon evening day,Good day! What can I do for you?
-good_morning_fr,bonne journee soiree matinee matin apres midi,Bonne journée ! Que puis-je faire pour vous ?
+good_morning,good morning good afternoon good evening have a good day,Good day! What can I do for you?
+good_morning_fr,bonjour bonne journee bonne soiree bonne matinee bon matin,Bonne journée ! Que puis-je faire pour vous ?
 good_night,good night goodnight sleep well sweet dreams,Good night! Your chats stay saved on this device.
 good_night_fr,bonne nuit dors dormir bien,Bonne nuit ! Vos conversations restent enregistrées sur cet appareil.
 how_are_you,how are you doing feeling going sup wassup up astra,"I’m software, so no moods, but everything is running fine. What can I do for you?"
@@ -10,7 +10,7 @@ how_are_you_fr,comment vas tu allez vous ca va forme astra,"Je suis un programme
 thanks,thanks thank you thx cheers appreciated much lot astra thanx thnx,"You’re welcome! If something was off, tell me, or fix it in `astra.csv`."
 thanks_fr,merci beaucoup bien infiniment remercie astra,Avec plaisir !
 bye,bye goodbye later cya farewell see you take care astra byee,Goodbye! Your chats are saved on this device.
-bye_fr,revoir adieu bientot ciao tchao prends soin astra au,Au revoir ! Vos conversations restent enregistrées sur cet appareil.
+bye_fr,au revoir adieu a bientot ciao tchao,Au revoir ! Vos conversations restent enregistrées sur cet appareil.
 apology,sorry apologies apologize oops bad,No problem at all.
 apology_fr,desole pardon excuse excusez oups,Pas de souci.
 compliment,great job nice work well done awesome amazing impressive brilliant love perfect,Thank you! Ideas and corrections are welcome: you can extend `astra.csv` to teach me more.
